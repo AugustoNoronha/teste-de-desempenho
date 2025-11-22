@@ -1,0 +1,23 @@
+# npx artillery run user-flow.yml
+
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 10 # Chegam 10 novos usuários por segundo
+      name: "Fase de Cruzeiro"
+  defaults:
+    headers:
+      x-my-service-auth: "token-simulado"
+
+scenarios:
+  - name: "Fluxo Misto"
+    flow:
+      - get:
+          url: "/"
+      - think: 2 # Usuário espera 2 segundos
+      - get:
+          url: "/io-wait" # Usuário faz uma operação de I/O
+      - think: 1
+      - get:
+          url: "/heavy" # Usuário gera carga de CPU
